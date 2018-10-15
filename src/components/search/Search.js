@@ -1,70 +1,55 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import axios from 'axios';
-import ImageResults from '../image-results/ImageResults';
+
 
 class Search extends Component {
-  state = {
-    searchText: '',
-    amount: 15,
-    apiUrl: 'https://pixabay.com/api',
-    apiKey: '10406021-9154f6e1d065831c703ea7e0c',
-    images: []
-  };
+	constructor(props){
+  super(props)
+  this.state = {
+   searchText:'',
+    apiUrl:'http://api.tvmaze.com/schedule',
+    apiKey:'896-QWywyNH6JGcZFu5exlRbamIT1meE',
+    show:[],
+  }
+}
 
-  onTextChange = e => {
+
+	onTextChange = e => {
     const val = e.target.value;
     this.setState({ [e.target.name]: val }, () => {
       if (val === '') {
-        this.setState({ images: [] });
+        this.setState({ show: [] });
       } else {
         axios
           .get(
             `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${
-              this.state.searchText
-            }&image_type=photo&per_page=${this.state.amount}&safesearch=true`
+              this.state.searchText}`
           )
-          .then(res => this.setState({ images: res.data.hits }))
+          .then(res => this.setState({ show: res.data.show }))
           .catch(err => console.log(err));
       }
     });
   };
 
-  onAmountChange = (e, index, value) => this.setState({ amount: value });
 
-  render() {
-    console.log(this.state.images);
-    return (
-      <div>
-        <TextField
-          name="searchText"
-          value={this.state.searchText}
-          onChange={this.onTextChange}
-          floatingLabelText="Search For Images"
-          fullWidth={true}
-        />
-        <br />
-        <SelectField
-          name="amount"
-          floatingLabelText="Amount"
-          value={this.state.amount}
-          onChange={this.onAmountChange}
-        >
-          <MenuItem value={5} primaryText="5" />
-          <MenuItem value={10} primaryText="10" />
-          <MenuItem value={15} primaryText="15" />
-          <MenuItem value={30} primaryText="30" />
-          <MenuItem value={50} primaryText="50" />
-        </SelectField>
-        <br />
-        {this.state.images.length > 0 ? (
-          <ImageResults images={this.state.images} />
-        ) : null}
-      </div>
-    );
-  }
+	render() {
+		console.log(this.state)
+	  return (
+	  	<div>
+  			<TextField
+  				name="searchText"
+  				value={this.state.searchText}
+  				onChange={this.onTextChange}
+  				floatingLabelText="Search For Movies"
+  				fullwidth={true}
+  			/>
+  			<br/>
+ 	
+	  	</div>
+	  )
+	}
 }
 
 export default Search;
